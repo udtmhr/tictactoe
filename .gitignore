@@ -8,6 +8,7 @@
 /venv
 /__pycache__
 /client_secret.json
+/player/__pycache__
 
 # Local History for Visual Studio Code
 .history/
