@@ -7,6 +7,8 @@ class TicTacToe:
         self.turn = 1
         self.pb = np.zeros(size * size, dtype=np.int64)
         self.ob = np.zeros(size * size, dtype=np.int64)
+        self.action_size = self.size ** 2
+        self.state_size = 3 ** self.action_size
     
     def reset(self):
         self.__init__(self.size)

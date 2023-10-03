@@ -1,13 +1,14 @@
 from tictactoe import TicTacToe
 from player.base_player import Player
-from player.random_player import RandomPlayer, RandomPlayer2, RandomPlayer3
+from player.random_player import *
 from player.qlearn import QLPlayer
+from player.dqn import DQN
 from player.mcts import *
 
-path = r'player\qtable\table3.4.npy'
+path = r'qnet\model1'
 
 env = TicTacToe()
-com1 = QLPlayer(env, path)
+com1 = DQN(env, path)
 com2 = Player(env)
 
 while True:

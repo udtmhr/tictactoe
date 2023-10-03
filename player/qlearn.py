@@ -39,19 +39,19 @@ class QLPlayer:
             self.env.reset()
             player, opponent = np.random.choice((-1, 1), 2, replace=False)
             state = self.env.get_state()
-            prev_action = None
+            pre_action = None
             while True:
                 if self.env.turn == player:
                     action = self.learn_take_action(epsilon, state)
-                    if env.check_action(action):
-                        env.put(action)
+                    if self.env.check_action(action):
+                        self.env.put(action)
                         reward = self.env.reward()
                         done = self.env.is_done()
                     else:
                         reward = -1
                         done = True
-                    prev_state = state
-                    prev_action = action
+                    pre_state = state
+                    pre_action = action
                 else:
                     action = com.take_action()
                     self.env.put(action)
@@ -59,8 +59,8 @@ class QLPlayer:
                     done = self.env.is_done()
                 state = self.env.get_state()
 
-                if (prev_action is not None and not self.env.turn == opponent) or done:
-                    self.update_qtable(prev_state, prev_action, state, reward, done, alpha, gamma)
+                if (pre_action is not None and self.env.turn == opponent) or done:
+                    self.update_qtable(pre_state, pre_action, state, reward, done, alpha, gamma)
                 if done:
                     break
                 self.env.change_turn()
@@ -71,8 +71,8 @@ if __name__ == "__main__":
     import sys
     sys.path.append("C:\\Users\\tomhi\\python\\tictactoe")
     from tictactoe import TicTacToe
-    from random_player import RandomPlayer3
+    from random_player import RandomPlayer
 
     env = TicTacToe()
-    ql = QLPlayer(env, r"player\qtable\table3.4.npy")
-    ql.learn(10000, 0.1, 0.9, 0.1, RandomPlayer3(env), r"player\qtable\table3.5")
+    ql = QLPlayer(env)
+    ql.learn(10000, 0.1, 0.9, 0.1, RandomPlayer(env), r"player\qtable\table1")
