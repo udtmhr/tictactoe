@@ -10,12 +10,8 @@ class MCSPlayer:
         return np.random.choice(self.env.legal_action(), 1)[0]
 
     def playout(self):
-        if self.env.is_win():
-            return 1
-        elif self.env.is_lose():
-            return -1
-        elif self.env.is_drow():
-            return 0
+        if (value := self.env.is_done()) is not None:
+            return value
         
         action = self.random_action()
         self.env.put(action)
@@ -47,16 +43,14 @@ class MCTSPlayer(MCSPlayer):
         self.n = 0
         self.child_nodes = []
     
-    def expand(self):
-        legal_actions = self.env.legal_action()
-        for action in legal_actions:
-            self.env.put(action)
-            self.env.change_turn()
-            self.child_nodes.append(MCTSPlayer(copy.deepcopy(self.env)))
-            self.env.change_turn()
-            self.env.pb[action] = 0
+    def add_child_node(self, action):
+        self.env.put(action)
+        self.env.change_turn()
+        self.child_nodes.append(MCTSPlayer(copy.deepcopy(self.env)))
+        self.env.change_turn()
+        self.env.pb[action] = 0
 
-    def calc_ucb1(self, w, n, t):
+    def calc_value(self, w, n, t):
         return w / n + (2 * np.log1p(t - 1) / n) ** 0.5
     
     def max_child_node(self):
@@ -69,19 +63,14 @@ class MCTSPlayer(MCSPlayer):
         best_child = None
         best_value = -float("inf")
         for child in self.child_nodes:
-            value = self.calc_ucb1(child.w, child.n, t)
+            value = self.calc_value(child.w, child.n, t)
             if value > best_value:
                 value = best_value
                 best_child = child
         return best_child
         
     def evaluate(self):
-        if self.env.is_done():
-            value = 1
-            if self.env.is_lose():
-                value = -1
-            else:
-                value = 0
+        if (value := self.env.is_done()) is not None:
             self.w += value
             self.n += 1
             return value
@@ -98,7 +87,8 @@ class MCTSPlayer(MCSPlayer):
             self.n += 1
 
             if self.n == self.expand_num:
-                self.expand()
+                for action in self.env.legal_action():
+                    self.add_child_node(action)
             return value
         
     def take_action(self):

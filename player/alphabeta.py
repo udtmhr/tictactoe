@@ -3,12 +3,8 @@ from base_player import Player
 
 class AlphaBetaPlayer(Player):    
     def alphabeta(self, alpha, beta):
-        if self.env.is_win():
-            return 1
-        elif self.env.is_lose():
-            return -1
-        elif self.env.is_drow():
-            return 0
+        if (value := self.env.is_done()) is not None:
+            return value
         
         for action in self.env.legal_action():
             self.env.put(action)
