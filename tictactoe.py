@@ -39,7 +39,12 @@ class TicTacToe:
         return np.sum(self.pb + self.ob) == 9
     
     def is_done(self):
-        return self.is_win() or self.is_lose() or self.is_drow()
+        if self.is_win():
+            return 1
+        elif self.is_lose():
+            return -1
+        elif self.is_drow():
+            return 0
     
     def legal_action(self):
         return np.where(self.pb + self.ob == 0)[0]
@@ -52,13 +57,8 @@ class TicTacToe:
         return self.turn == 1
     
     def reward(self):
-        if self.is_lose():
-            return -1
-        if self.is_win():
-            return 1
-        else:
-            return 0
-
+        return self.is_done()
+    
     def get_state(self):
         o_board, x_board = (self.pb, self.ob) if self.is_first_player() else (self.ob, self.pb)
         o_board = np.where(o_board == 1)[0]
