@@ -1,7 +1,9 @@
 import numpy as np
-from base_player import Player
 
-class AlphaBetaPlayer(Player):    
+class AlphaBetaPlayer:    
+    def __init__(self, env):
+        self.env = env
+        
     def alphabeta(self, alpha, beta):
         if (value := self.env.is_done()) is not None:
             return value

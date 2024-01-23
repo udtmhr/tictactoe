@@ -43,12 +43,13 @@ class MCTSPlayer(MCSPlayer):
         self.n = 0
         self.child_nodes = []
     
-    def add_child_node(self, action):
-        self.env.put(action)
-        self.env.change_turn()
-        self.child_nodes.append(MCTSPlayer(copy.deepcopy(self.env)))
-        self.env.change_turn()
-        self.env.pb[action] = 0
+    def expand(self):
+        for action in self.env.legal_action():
+            self.env.put(action)
+            self.env.change_turn()
+            self.child_nodes.append(MCTSPlayer(copy.deepcopy(self.env)))
+            self.env.change_turn()
+            self.env.pb[action] = 0
 
     def calc_value(self, w, n, t):
         return w / n + (2 * np.log1p(t - 1) / n) ** 0.5
@@ -87,8 +88,7 @@ class MCTSPlayer(MCSPlayer):
             self.n += 1
 
             if self.n == self.expand_num:
-                for action in self.env.legal_action():
-                    self.add_child_node(action)
+                self.expand()
             return value
         
     def take_action(self):

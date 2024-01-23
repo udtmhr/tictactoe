@@ -117,7 +117,7 @@ class DQN:
 
 if __name__ == "__main__":
     import sys
-    sys.path.append('C:\Users\tomhi\python\tictactoe\tictactoe.py')
+    sys.path.append(r'C:\Users\tomhi\python\tictactoe')
     import matplotlib.pyplot as plt
     from tictactoe import TicTacToe
     from random_player import RandomPlayer

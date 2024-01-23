@@ -44,7 +44,7 @@ class TicTacToe:
         elif self.is_lose():
             return -1
         elif self.is_drow():
-            return 0
+            return 0.2
     
     def legal_action(self):
         return np.where(self.pb + self.ob == 0)[0]
